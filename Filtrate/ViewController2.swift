@@ -1,9 +1,9 @@
 //
 //  ViewController2.swift
-//  Swipe Navigation Xcode 7
+//  Filtrate
 //
-//  Created by PJ Vea on 7/22/15.
-//  Copyright © 2015 Vea Software. All rights reserved.
+//  Created by Bryan Ayllon on 9/6/16.
+//  Copyright © 2016 Bryan Ayllon. All rights reserved.
 //
 
 import UIKit

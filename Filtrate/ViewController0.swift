@@ -27,12 +27,12 @@ class ViewController0: UIViewController {
         
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         // get the camera device
-        let devices = AVCaptureDevice.devicesWithMediaType(AVMediaTypeVideo)
-        for device in devices {
+        let devices = AVCaptureDevice.devices(withMediaType: AVMediaTypeVideo)
+        for device in devices! {
             // the back camera
-            if device.position == AVCaptureDevicePosition.Back{
+            if (device as AnyObject).position == AVCaptureDevicePosition.back{
                 // try to use the camera
                 do {
                     let input = try AVCaptureDeviceInput(device: device as! AVCaptureDevice)
@@ -54,26 +54,26 @@ class ViewController0: UIViewController {
     }
     
     // start recording and streaming
-    @IBAction func startStreaming(sender: AnyObject) {
+    @IBAction func startStreaming(_ sender: AnyObject) {
         print("---> Starting to stream video")
-        if let video = videoOutput.connectionWithMediaType(AVMediaTypeVideo){
+        if let video = videoOutput.connection(withMediaType: AVMediaTypeVideo){
             let buffer = videoOutput.sampleBufferDelegate
             print(buffer)
         }
     }
     
     // capture still image
-    @IBAction func captureStillImage(sender: AnyObject){
-        if let picture = pictureOutput.connectionWithMediaType(AVMediaTypeVideo){
-            pictureOutput.captureStillImageAsynchronouslyFromConnection(picture, completionHandler: {
+    @IBAction func captureStillImage(_ sender: AnyObject){
+        if let picture = pictureOutput.connection(withMediaType: AVMediaTypeVideo){
+            pictureOutput.captureStillImageAsynchronously(from: picture, completionHandler: {
                 buffer, error in
                 let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(buffer)
-                UIImageWriteToSavedPhotosAlbum(UIImage(data: imageData)!, nil, nil, nil)
+                UIImageWriteToSavedPhotosAlbum(UIImage(data: imageData!)!, nil, nil, nil)
             })
         }
     }
     
-    func startPictureSession(input: AVCaptureDeviceInput){
+    func startPictureSession(_ input: AVCaptureDeviceInput){
         // check if the camera is available
         if videoSession.canAddInput(input){
             // save the session
@@ -89,7 +89,7 @@ class ViewController0: UIViewController {
                 videoPreviewLayer = AVCaptureVideoPreviewLayer(session: videoSession)
                 // resize the video to fill
                 videoPreviewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
-                videoPreviewLayer.connection.videoOrientation = AVCaptureVideoOrientation.Portrait
+                videoPreviewLayer.connection.videoOrientation = AVCaptureVideoOrientation.portrait
                 // position the layer
                 videoPreviewLayer.position = CGPoint(x: self.photoPreview.frame.width/2, y: self.photoPreview.frame.height/2)
                 videoPreviewLayer.bounds = self.photoPreview.frame

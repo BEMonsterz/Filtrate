@@ -1,64 +1,85 @@
 //
-//  MoreTestingViewController.swift
+//  TestViewController.swift
 //  Filtrate
 //
-//  Created by Bryan Ayllon on 9/13/16.
+//  Created by Bryan Ayllon on 9/6/16.
 //  Copyright © 2016 Bryan Ayllon. All rights reserved.
 //
 
+
 import UIKit
+import CoreImage
 
-class MoreTestingViewController: UIViewController {
-
-    @IBOutlet weak var scrollView: UIScrollView!
+class MoreTestingViewController: UIViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    override func viewDidLoad()
-    {
+    @IBOutlet weak var photoViews: UIImageView!
+    var originalImage :UIImage?
+    
+    override func viewDidLoad() {
         super.viewDidLoad()
         
-        let vc0 = ViewController0(nibName: "ViewController0", bundle: nil)
-        
-        self.addChildViewController(vc0)
-        self.scrollView.addSubview(vc0.view)
-        vc0.didMoveToParentViewController(self)
-        
-        let vc1 = ViewController1(nibName: "ViewController1", bundle:nil)
-        
-        var frame1 = vc1.view.frame
-        frame1.origin.x = self.view.frame.size.width
-        vc1.view.frame = frame1
-        
-        self.addChildViewController(vc1)
-        self.scrollView.addSubview(vc1.view)
-        vc1.didMoveToParentViewController(self)
-        
-        let vc2 = ViewController2(nibName: "ViewController2", bundle:nil)
-        
-        var frame2 = vc2.view.frame
-        frame2.origin.x = self.view.frame.size.width * 2
-        vc2.view.frame = frame2
-        
-        self.addChildViewController(vc2)
-        self.scrollView.addSubview(vc2.view)
-        vc2.didMoveToParentViewController(self)
-        
-        let vc3 = ViewController2(nibName: "ViewController3", bundle:nil)
-        
-        var frame3 = vc3.view.frame
-        frame3.origin.x = self.view.frame.size.width * 3
-        vc3.view.frame = frame3
-        
-        self.addChildViewController(vc3)
-        self.scrollView.addSubview(vc3.view)
-        vc3.didMoveToParentViewController(self)
-        
-        self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width * 4, self.view.frame.size.height - 66);
+        // Do any additional setup after loading the view.
     }
     
-    override func didReceiveMemoryWarning()
-    {
+    override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    @IBAction func cameraButtonPressed(){
+        let imagePickerViewController =  UIImagePickerController()
+        imagePickerViewController.delegate = self
+        
+        let alertController = UIAlertController(title: "Choose", message: nil, preferredStyle: .actionSheet)
+        
+        let chooseFromLibraryOption = UIAlertAction(title: "Choose from Library", style: .default) { (alert :UIAlertAction) in
+            
+            imagePickerViewController.sourceType = .photoLibrary
+            self.present(imagePickerViewController, animated: true, completion: nil)
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (alert :UIAlertAction) in
+            
+            
+            
+        }
+        
+        let takePictureAction = UIAlertAction(title: "Take a picture", style: .default) { (alert :UIAlertAction) in
+            
+            imagePickerViewController.sourceType = .camera
+            self.present(imagePickerViewController, animated: true, completion: nil)
+            
+        }
+        
+        alertController.addAction(chooseFromLibraryOption)
+        
+        alertController.addAction(takePictureAction)
+        
+        alertController.addAction(cancel)
+        
+        self.present(alertController, animated: true, completion: nil)
+        
+    }
+    
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        self.originalImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+        
+        self.photoViews.image = self.originalImage
+        
+        picker.dismiss(animated: true, completion: nil)
+        
+    }
+    
+    
+    @IBAction func saveButton(){
+        
+        UIImageWriteToSavedPhotosAlbum(originalImage!, self, nil, nil)
+        
+    }
+    
+    
+    
+    
     
 }
